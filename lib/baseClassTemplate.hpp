@@ -5,7 +5,9 @@
 
 #ifdef DEBUGJOUVEN
 #include "loggingMacros.hpp"
+#ifndef __ANDROID__
 #include "backwardSTso/backward.hpp"
+#endif
 #include <iostream>
 #endif
 

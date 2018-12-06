@@ -90,7 +90,7 @@ class datasetInternal_c
 		{
 			//simplement mirar si labels te duplicats
 			std::vector<std::string> labelsTmp(labels_pri);
-			eines::removeDuplicates_f(labelsTmp);
+			removeDuplicates_ft(labelsTmp);
 			if (labels_pri.size() != labelsTmp.size())
 			{
 				conflict_pri = true;
@@ -116,7 +116,7 @@ class datasetInternal_c
 		}
 		int_fast64_t getLabelPosition(const std::string& label_par_con) const
 		{
-			return eines::getValuePosition(labels_pri, label_par_con);
+			return getValuePosition_ft(labels_pri, label_par_con);
 		}
 		//removes a case
 		int_fast32_t removeCase(const std::string& case_par_con)
@@ -214,7 +214,7 @@ class datasetInternal_c
 			, std::map<std::string, int_fast64_t> keyLabelValueYValue_par = std::map<std::string, int_fast64_t>()
 		)
 		{
-			eines::removeIfPredicateTrue_f(
+			removeIfPredicateTrue_ft(
 				keyLabelValueYValue_par,
 				[&](const typename std::map<std::string, int_fast64_t>::const_iterator& tmp)
 					{ return not hasLabel(tmp->first);}
@@ -327,7 +327,7 @@ class datasetInternal_c
 					);
 				}
 			}
-			eines::removeDuplicates_f(obj_par.labels_pri);
+			removeDuplicates_ft(obj_par.labels_pri);
 
 			std::vector<datesetExternal_s> datasets;
 			si_par_con.getMember("datasets", datasets);

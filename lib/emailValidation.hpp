@@ -134,7 +134,7 @@ inline bool isValidFormat_f(const std::string& address_par_con)
 			else
 			{
 				//
-				if (equalOnce_f(address_par_con[index],'\"','(',')',',',':',';','<','>','[','\\',']'))
+				if (equalOnce_ft(address_par_con[index],'\"','(',')',',',':',';','<','>','[','\\',']'))
 				{
 #ifdef DEBUGJOUVEN
 		std::cout << DEBUGFULL;
@@ -213,7 +213,7 @@ inline bool isValidFormat_f(const std::string& address_par_con)
 #endif
 			return false;
 		}
-		if (equalOnce_f(address_par_con[index],'\"','(',')',',',':',';','<','>','[','\\',']','@'))
+		if (equalOnce_ft(address_par_con[index],'\"','(',')',',',':',';','<','>','[','\\',']','@'))
 		{
 #ifdef DEBUGJOUVEN
 		std::cout << DEBUGFULL;

@@ -3,9 +3,9 @@
 #ifndef COMUSO_PRACTICALTEMPLATES_H_
 #define COMUSO_PRACTICALTEMPLATES_H_
 
-#include "macros.hpp"
 
 #ifdef DEBUGJOUVEN
+#include "macros.hpp"
 #include "backwardSTso/backward.hpp"
 #include "comuso/loggingMacros.hpp"
 #include <iostream>
@@ -16,11 +16,9 @@
 #include <vector>
 #include <functional>
 
-namespace eines
-{
 
 template <typename T, typename U>
-bool equalOnce_f(
+bool equalOnce_ft(
 	const T &a_par_con
 	, const U &b_par_con)
 {
@@ -28,18 +26,18 @@ bool equalOnce_f(
 }
 
 template <typename T, typename U, typename... Others>
-bool equalOnce_f(
+bool equalOnce_ft(
 	const T &a_par_con
 	, const U &b_par_con
 	, Others const &... others_par_con)
 {
     return (a_par_con == b_par_con)
-    	or equalOnce_f(a_par_con, others_par_con...);
+    	or equalOnce_ft(a_par_con, others_par_con...);
 }
 
 //use only on sortable non unique containers
 template <typename T>
-void removeDuplicates_f(T& obj_par)
+void removeDuplicates_ft(T& obj_par)
 {
 	std::sort(obj_par.begin(), obj_par.end());
 	obj_par.erase(
@@ -52,69 +50,51 @@ void removeDuplicates_f(T& obj_par)
 
 
 template<typename T>
-void removeIfPredicateTrue_f(T& obj_par, const std::function<bool(const typename T::const_iterator&)>& func_par_con)
+uint_fast32_t removeIfPredicateTrue_ft(T& obj_par, const std::function<bool(const typename T::const_iterator&)>& func_par_con)
 {
+	uint_fast32_t countTmp(0);
 	for (auto it = obj_par.cbegin(); it != obj_par.cend() /* not hoisted */; /* no increment */)
 	{
 		if (func_par_con(it))
 		{
 			it = obj_par.erase(it);
+			countTmp = countTmp + 1;
 		}
 		else
 		{
 			++it;
 		}
 	}
+	return countTmp;
 }
 
-//template <typename T, template <typename ...> class Container>
-//void removeIfPredicateTrue_f(Container<T>& obj_par, const std::function<bool(const typename Container<T>::const_iterator&)>& func_par_con)
-//{
-//	for (auto it = obj_par.cbegin(); it != obj_par.cend() /* not hoisted */; /* no increment */)
-//	{
-//		if (func_par_con(it))
-//		{
-//			it = obj_par.erase(it);
-//		}
-//		else
-//		{
-//			++it;
-//		}
-//	}
-//}
-//
-//template <typename T, template <typename ...> class Container>
-//void removeIfPredicateTrue_f(Container<T*>& obj_par, const std::function<bool(const typename Container<T*>::const_iterator&)>& func_par_con)
-//{
-//	for (auto it = obj_par.cbegin(); it != obj_par.cend() /* not hoisted */; /* no increment */)
-//	{
-//		if (func_par_con(it))
-//		{
-//			it = obj_par.erase(it);
-//		}
-//		else
-//		{
-//			++it;
-//		}
-//	}
-//}
-
+//removes anything smaller than 1
+//useful for DB Ids/sequences that usually start at 1
 template <typename T>
-void removeNonPositive_f(T& obj_par)
+void removeNonPositive_ft(T& obj_par)
 {
 	obj_par.erase(std::remove_if(obj_par.begin(), obj_par.end(),
 		[](const auto number_ite_con) { return number_ite_con < 1; }), obj_par.end());
 }
 
+//removes anything smaller than 0
+//useful for 0 index starting stuff
 template <typename T>
-void removeEmpty_f(T& obj_par)
+void removeNegative_ft(T& obj_par)
+{
+	obj_par.erase(std::remove_if(obj_par.begin(), obj_par.end(),
+		[](const auto number_ite_con) { return number_ite_con < 0; }), obj_par.end());
+}
+
+template <typename T>
+void removeEmpty_ft(T& obj_par)
 {
 	obj_par.erase(std::remove_if(obj_par.begin(), obj_par.end(),
 		[](const auto& item_ite_con) { return item_ite_con.empty(); }), obj_par.end());
 }
 
 template <typename T, typename U>
-bool allEqual_f(
+bool allEqual_ft(
 	const T &a_par_con
 	, const U &b_par_con)
 {
@@ -122,13 +102,13 @@ bool allEqual_f(
 }
 
 template <typename T, typename U, typename... Others>
-bool allEqual_f(
+bool allEqual_ft(
 	const T &a_par_con
 	, const U &b_par_con
 	, Others const &... others_par_con)
 {
     return (a_par_con == b_par_con)
-    	and allEqual_f(a_par_con, others_par_con...);
+    	and allEqual_ft(a_par_con, others_par_con...);
 }
 
 //use to create std::unordered_map<actions, bool, EnumClassHash> actionsRequireLoginMap
@@ -168,7 +148,7 @@ struct EnumClassHash
 //it truly has another one, the allocator with default value, and when using templates it requires to explicitly
 //put every one, using the variadic syntax allows to use the default value
 template<typename T, template <typename ...> class ContainerBase, typename U, template <typename ...> class ContainerDerived>
-ContainerDerived<U> moveContainer_f(const ContainerBase<T>&& containerWithBase)
+ContainerDerived<U> moveContainer_ft(const ContainerBase<T>&& containerWithBase)
 {
 	ContainerDerived<U> result;
 	if (not containerWithBase.empty())
@@ -183,7 +163,7 @@ ContainerDerived<U> moveContainer_f(const ContainerBase<T>&& containerWithBase)
 }
 
 template <typename T, template <typename ...> class Container>
-bool insertIfNotExists_f(const T& item, Container<T>& container)
+bool insertIfNotExists_ft(const T& item, Container<T>& container)
 {
 	for (const auto& containerItem_ite_con : container)
 	{
@@ -197,13 +177,13 @@ bool insertIfNotExists_f(const T& item, Container<T>& container)
 }
 
 template<class T, class Container>
-bool containsOnce(const Container& container_par_con, const T& value_par_con)
+bool containsOnce_ft(const Container& container_par_con, const T& value_par_con)
 {
 	return container_par_con.cend() != std::find(container_par_con.cbegin(), container_par_con.cend(), value_par_con);
 }
 
 template<typename T>
-std::vector<T> copySplitVectors(
+std::vector<T> copySplitVectors_ft(
 	const T& vectorToSplit_par_con
 	, const int_fast32_t splitSize_par_con
 )
@@ -248,7 +228,7 @@ std::vector<T> copySplitVectors(
 }
 
 template<typename T>
-std::vector<T> moveSplitVectors(
+std::vector<T> moveSplitVectors_ft(
 	T&& vectorToSplit_par_con
 	, const int_fast32_t splitSize_par_con
 ) noexcept
@@ -298,7 +278,7 @@ std::vector<T> moveSplitVectors(
 }
 
 template<class T, class Container>
-int_fast64_t getValuePosition(
+int_fast64_t getValuePosition_ft(
 	const Container& container_par_con
 	, const T& value_par_con)
 {
@@ -313,5 +293,4 @@ int_fast64_t getValuePosition(
 	}
 }
 
-}
 #endif /* COMUSO_PRACTICALTEMPLATES_H_ */
