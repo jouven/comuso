@@ -3,14 +3,6 @@
 #ifndef COMUSO_BASECLASS_H_
 #define COMUSO_BASECLASS_H_
 
-#ifdef DEBUGJOUVEN
-#include "loggingMacros.hpp"
-#ifndef __ANDROID__
-#include "backwardSTso/backward.hpp"
-#endif
-#include <iostream>
-#endif
-
 #include <string>
 #include <utility>
 #include <mutex>
